@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASSWORD MANAGER</title>
+
+
+    	<!--LINK THE BOOTSTRAP CSS CODE-->
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+   	<!--INSERTION OF NAVBAR-->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  	<div class="container-fluid">
+	    	<a class="navbar-brand" href="#">PASSWORD MANAGER</a>
+	    	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	      	<span class="navbar-toggler-icon"></span>
+	    	</button>
+	    	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	      	<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+	        	<li class="nav-item">
+	          		<a class="nav-link" href="#">Home</a>
+	        	</li>
+	        	<li class="nav-item">
+	          		<a class="nav-link" href="#manage">Manage Passwords</a>
+	        	</li>
+	        	<li class="nav-item">
+	          		<a class="nav-link" href="#">Log Out</a>
+	        	</li>
+	    </div>
+	</nav>
+
+    <section class="home_section" id="home">
+        <h2 class="text">Password Manager</h2>
+        <h4 class="text">"We Secure Your Passwords</h4>
+    </section>
+
+
+    <!-- HOME -->
+    <div class="container mt-3">
+
+        {% for message in messages %}
+        <p class="alert alert-success mt-3">{{message}}</p>
+        {% endfor %}
+
+        {% if sel_manage %}
+
+        <form method="POST" action="{% url 'updates' sel_manage.id %}">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label>Domain</label>
+                <input type="text" class="form-control" value="{{sel_manage.domains}}" name="domains" placeholder="Like Website name, Email ID, Application login...">
+            </div>
+            <div class="form-group mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" value="{{sel_manage.emails}}" name="emails" placeholder="Enter Your Email Here...">
+            </div>
+            <div class="form-group mb-3">
+                <label>Password</label>
+                <input type="password" class="form-control" value="{{sel_manage.passwords}}" name="passwords" placeholder="Enter Your Password Here...">
+            </div>
+            
+            <div class="form-group mb-3">
+                <label>Mobile Number</label>
+                <input type="text" class="form-control" value="{{sel_manage.mobile_numbers}}" name="mobile_numbers" placeholder="Enter Your Mobile Number...">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </form>     
+        {% else %}
+        <form method="POST" action="{% url 'manage_items' %}">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label>Domain</label>
+                <input type="text" class="form-control" name="domains" placeholder="Like Website name, Email ID, Application login...">
+            </div>
+            <div class="form-group mb-3">
+                <label>Email</label>
+                <input type="email" class="form-control" name="emails" placeholder="Enter Your Email Here...">
+            </div>
+            <div class="form-group mb-3">
+                <label>Password</label>
+                <input type="password" class="form-control" name="passwords" placeholder="Enter Your Password Here...">
+            </div>
+            <div class="form-group mb-3">
+                <label>Mobile Number</label>
+                <input type="text" class="form-control" name="mobile_numbers" placeholder="Enter Your Mobile Number...">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </form>        
+
+        {% endif %}
+    </div>
+
+    
+    <!-- MANAGE -->
+   <div id="manage">
+    <div class="tables mt-5" id="tables">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Domain</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Mobile Number</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in manage_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.domains}}</td>
+                    <td>{{i.emails}}</td>
+                    <td>{{i.passwords}}</td>
+                    <td>{{i.mobile_numbers}}</td>
+                    <td>
+                        <a href="{% url 'update_items' i.id %}" class="btn btn-warning">EDIT</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_items' i.id %}" class="btn btn-danger">DELETE</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+   </div>
+
+
+
+
+    
+
+
+    <!--LINK THE BOOTSTRAP JS CODE-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>
